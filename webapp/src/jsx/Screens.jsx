@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var ScreenStore = require('../stores/ScreenStore')
+var ScreenConstants = require('../constants/ScreenConstants')
+	, ScreenStore = require('../stores/ScreenStore')
 	, ScreenActions = require('../actions/ScreenActions')
 
 var ScreenItem = require('./ScreenItem');
@@ -12,7 +13,7 @@ var Screens = React.createClass({
 	// lifecycle
 	getInitialState : function () {
 		return {
-			screens : ScreenStore.all()
+			screens : ScreenStore.alphaAll()
 		}
 	},
 	componentDidMount : function () {
@@ -23,8 +24,15 @@ var Screens = React.createClass({
 	},
 
 	// event handlers
-	onStoreChange : function () {
-		this.setState({ screens : ScreenStore.all() });
+	onStoreChange : function (action) {
+		if (action) {
+			switch (action.actionType) {
+				case ScreenConstants.SCREEN_CREATE:
+					window.router.navigate("/screens/" + action.screen.id, { trigger : true });
+					return;
+			}
+		}
+		this.setState({ screens : ScreenStore.alphaAll() });
 	},
 	onSelectScreen : function (screen) {
 		window.router.navigate("/screens/" + screen.id, { trigger : true });

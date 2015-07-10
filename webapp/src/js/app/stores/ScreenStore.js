@@ -37,10 +37,16 @@ var ScreenStore = Store.extend({
       model.issues = []
     }
 
+    model.roles || (model.roles = [])
+
     if (_.isFunction(cb)) {
       cb(errors);
     }
     return (errors.length === 0);
+  },
+
+  alphaAll : function () {
+    return _.sortBy(this.all(), function(screen){ return screen.name });
   },
 
   // create a new screen
@@ -70,7 +76,8 @@ var ScreenStore = Store.extend({
       name : "",
       description : "",
       completed : false,
-      difficulty : 0
+      difficulty : 0,
+      roles : ["model","booker","accountant","manager"]
     });
 
 
@@ -132,15 +139,15 @@ AppDispatcher.register(function (payload){
       }    
       break;
     case ScreenConstants.SCREEN_CREATE:
-      ScreenStore.add(ScreenStore.newScreen());
-      ScreenStore.emitChange();
+      var screen = ScreenStore.newScreen();
+      ScreenStore.add(screen);
+      action.screen = screen
+      ScreenStore.emitChange(action);
       break;
 		case ScreenConstants.SCREEN_SAVE :
 			if (action.response) {
-        if (action.data) {
-          if (action.data.cid) {
-            ScreenStore.remove(action.data.cid);
-          }
+        if (action.remove) {
+          ScreenStore.remove(action.remove);
         }
         ScreenStore.add(action.response);
 				ScreenStore.emitChange(action);

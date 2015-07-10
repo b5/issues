@@ -700,7 +700,7 @@ button {
   min-height: 35px;
   text-transform: uppercase;
   color: #5ebaca;
-  background: #083b51;
+  background: #282828;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
@@ -983,7 +983,7 @@ html {
   color: #3c403f;
 }
 body.splash {
-  background: #083b51;
+  background: #282828;
   color: #fff;
 }
 body.splash hr {
@@ -992,11 +992,11 @@ body.splash hr {
 }
 body.splash button {
   background: #273440;
-  color: #083b51;
+  color: #282828;
 }
 header,
 footer {
-  background: #083b51;
+  background: #282828;
   color: #fff;
 }
 header a,
@@ -1060,7 +1060,7 @@ h4.primary,
 h5.primary,
 h6.primary,
 p.primary {
-  color: #083b51;
+  color: #282828;
 }
 hr {
   border-top: none;
@@ -1486,7 +1486,7 @@ div.signature .done {
   z-index: 2;
 }
 .gridView .colHeader {
-  background: #083b51;
+  background: #282828;
   padding: 2px 4px;
   z-index: 1;
 }
@@ -1568,7 +1568,7 @@ div.signature .done {
   background: rgba(0,0,0,0.025);
 }
 .calendar.week .timeRuler {
-  border-bottom: 1px solid #083b51;
+  border-bottom: 1px solid #282828;
   opacity: 0.3;
 }
 .calendar.week .hourMarker {
@@ -1591,7 +1591,7 @@ div.signature .done {
   background: #c80000;
 }
 .icon {
-  color: #083b51;
+  color: #282828;
 }
 a.ss-icon {
   display: block;
@@ -1637,7 +1637,7 @@ body,
   left: 0;
   width: 100%;
   min-height: 50px;
-  background: #083b51;
+  background: #282828;
   -moz-box-shadow: 0 2px 15px rgba(0,0,0,0.09);
   -webkit-box-shadow: 0 2px 15px rgba(0,0,0,0.09);
   box-shadow: 0 2px 15px rgba(0,0,0,0.09);
@@ -1694,7 +1694,7 @@ body.standalone #navbar {
   padding: 30px 0 10px 0;
 }
 .login {
-  background: #083b51;
+  background: #282828;
   color: #fff;
   padding: 1em 10px;
 }
@@ -1719,7 +1719,7 @@ body.standalone #navbar {
 #page.screen > header,
 #page.screens > footer,
 #page.screen > footer {
-  background: #083b51;
+  background: #282828;
   color: #fff;
 }
 #page.screens > header a,
@@ -1758,7 +1758,7 @@ body.standalone #navbar {
 }
 .list header,
 .list .header {
-  background: #083b51;
+  background: #282828;
   min-height: 30px;
 }
 .list .item {
@@ -1794,7 +1794,7 @@ body.standalone #navbar {
   margin-top: 5px;
 }
 .dialogue {
-  background: #083b51;
+  background: #282828;
   color: #fff;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -1813,7 +1813,7 @@ body.standalone #navbar {
   width: 34px;
   height: 34px;
   margin: 5px;
-  background: #083b51;
+  background: #282828;
   -webkit-border-radius: 100%;
   -moz-border-radius: 100%;
   -o-border-radius: 100%;
@@ -1827,7 +1827,7 @@ body.standalone #navbar {
 }
 .portraitIcon.selected {
   background: #808080;
-  color: #083b51;
+  color: #282828;
 }
 .model.item .name {
   margin-top: 12px;
@@ -1845,7 +1845,8 @@ body.standalone #navbar {
 }
 #page.screen .issues .item .name,
 #page.screen .issues .item .difficulty,
-#page.screen .issues .item .description {
+#page.screen .issues .item .description,
+#page.screen .issues .item .rolesSelector {
   margin: 0 40px;
 }
 #page.screen .issues .item .name {
@@ -1859,6 +1860,14 @@ body.standalone #navbar {
 }
 #page.screen .issues .item.completed {
   opacity: 0.5;
+}
+.rolesSelector .role {
+  opacity: 0.25;
+  color: #444;
+  margin-right: 8px;
+}
+.rolesSelector .selected.role {
+  opacity: 1;
 }
 @media only screen and (max-width: 1300px) {
   #navbar {

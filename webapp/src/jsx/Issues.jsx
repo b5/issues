@@ -28,6 +28,7 @@ var Issues = React.createClass({
 					<TouchAnchor className="ss-icon right" onClick={this.onAddIssue} text="plus" />
 					<h4>Issues</h4>
 				</div>
+				<div className="clear"></div>
 				<List data={this.props.data} screenId={this.props.screenId} element={IssueItem} onSelectItem={this.onSelectIssue} noItemsString="No Issues" />
 				<div className="clear"></div>
 			</div>

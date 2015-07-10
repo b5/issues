@@ -46,8 +46,11 @@ var ScreenItem = React.createClass({
 
 	// render 
 	render : function () {
+		var screen = this.props.data
+			, completed = _.filter(screen.issues, function(i){ return (i.completed === true); }).length;
 		return (
 			<div className="item" onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd} onClick={this.onClick}>
+				<h4 className="right">{completed}/{screen.issues.length}</h4>
 				<h3>{this.props.data.name || "Untitled Screen"}</h3>
 			</div>
 		);

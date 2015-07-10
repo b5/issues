@@ -10,7 +10,7 @@ type Screen struct {
 	Created     int64    `json:"created"`
 	Updated     int64    `json:"updated"`
 	Name        string   `json:"name"`
-	Endpoint    string   `json:"endpoint"`
+	Roles       []string `json:"roles"`
 	Description string   `json:"description"`
 	Issues      []*Issue `json:"issues"`
 }

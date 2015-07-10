@@ -1938,18 +1938,21 @@ var ScreenActions = {
 	},
 	save : function (screen) {
 		if (!_.isObject(screen)) { return false; }
+		var remove;
 
 		// if ths screen has a cid, remove it
-		if (screen.id.indexOf("screen") > -1) {
-			screen.id == 0;
+		if (screen.id.indexOf("screen") !== -1) {
+			remove = screen.id;
+			screen.id = "";
 		}
 
-		// AppDispatcher.handleServerAction({
-		// 	actionType : ScreenConstants.SCREEN_SAVE,
-		// 	requestType : (screen.id) ? ServerConstants.PUT : ServerConstants.POST,
-		// 	url : (screen.id) ? '/api/screens/' + screen.id : '/api/screens',
-		// 	data : screen
-		// });
+		AppDispatcher.handleServerAction({
+			actionType : ScreenConstants.SCREEN_SAVE,
+			requestType : (screen.id) ? ServerConstants.PUT : ServerConstants.POST,
+			url : (screen.id) ? '/api/screens/' + screen.id : '/api/screens',
+			data : screen,
+			remove : remove
+		});
 
 		return true;
 	},
@@ -2165,7 +2168,7 @@ module.exports = keyMirror({
 	SCREEN_REMOVE_ISSUE : null,
 });
 
-},{"react/lib/keyMirror":55}],8:[function(require,module,exports){
+},{"react/lib/keyMirror":56}],8:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
@@ -2175,7 +2178,7 @@ module.exports = keyMirror({
 	DELETE : null,
 	OPTIONS : null
 });
-},{"react/lib/keyMirror":55}],9:[function(require,module,exports){
+},{"react/lib/keyMirror":56}],9:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror')
 
 module.exports = keyMirror({
@@ -2190,7 +2193,7 @@ module.exports = keyMirror({
 	SESSION_SET_ROLES : null,
 });
 
-},{"react/lib/keyMirror":55}],10:[function(require,module,exports){
+},{"react/lib/keyMirror":56}],10:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -2221,7 +2224,7 @@ var AppDispatcher = _.extend(Dispatcher.prototype, {
 
 module.exports = AppDispatcher;
 
-},{"ff-react/dispatcher/Dispatcher":38}],11:[function(require,module,exports){
+},{"ff-react/dispatcher/Dispatcher":39}],11:[function(require,module,exports){
 var App = require('../views/App')
 	, Login = require('../views/Login')
 	, Screens = require('../views/Screens')
@@ -2286,9 +2289,9 @@ var Router = Backbone.Router.extend({
 });
 
 module.exports = window.router = new Router();
-},{"../stores/SessionStore":14,"../views/App":17,"../views/Issue":18,"../views/Login":21,"../views/Screen":23,"../views/Screens":25}],12:[function(require,module,exports){
+},{"../stores/SessionStore":14,"../views/App":17,"../views/Issue":18,"../views/Login":21,"../views/Screen":24,"../views/Screens":26}],12:[function(require,module,exports){
 arguments[4][11][0].apply(exports,arguments)
-},{"../stores/SessionStore":14,"../views/App":17,"../views/Issue":18,"../views/Login":21,"../views/Screen":23,"../views/Screens":25,"dup":11}],13:[function(require,module,exports){
+},{"../stores/SessionStore":14,"../views/App":17,"../views/Issue":18,"../views/Login":21,"../views/Screen":24,"../views/Screens":26,"dup":11}],13:[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher')
   , ScreenConstants = require('../constants/ScreenConstants')
   , SessionConstants = require('../constants/SessionConstants')
@@ -2328,10 +2331,16 @@ var ScreenStore = Store.extend({
       model.issues = []
     }
 
+    model.roles || (model.roles = [])
+
     if (_.isFunction(cb)) {
       cb(errors);
     }
     return (errors.length === 0);
+  },
+
+  alphaAll : function () {
+    return _.sortBy(this.all(), function(screen){ return screen.name });
   },
 
   // create a new screen
@@ -2361,7 +2370,8 @@ var ScreenStore = Store.extend({
       name : "",
       description : "",
       completed : false,
-      difficulty : 0
+      difficulty : 0,
+      roles : ["model","booker","accountant","manager"]
     });
 
 
@@ -2423,15 +2433,15 @@ AppDispatcher.register(function (payload){
       }    
       break;
     case ScreenConstants.SCREEN_CREATE:
-      ScreenStore.add(ScreenStore.newScreen());
-      ScreenStore.emitChange();
+      var screen = ScreenStore.newScreen();
+      ScreenStore.add(screen);
+      action.screen = screen
+      ScreenStore.emitChange(action);
       break;
 		case ScreenConstants.SCREEN_SAVE :
 			if (action.response) {
-        if (action.data) {
-          if (action.data.cid) {
-            ScreenStore.remove(action.data.cid);
-          }
+        if (action.remove) {
+          ScreenStore.remove(action.remove);
         }
         ScreenStore.add(action.response);
 				ScreenStore.emitChange(action);
@@ -2683,7 +2693,7 @@ var Store = StandardStore.extend({
 });
 
 module.exports = Store;
-},{"../utils/DefaultPageOptions":16,"ff-react/stores/StandardStore":51,"underscore":3}],16:[function(require,module,exports){
+},{"../utils/DefaultPageOptions":16,"ff-react/stores/StandardStore":52,"underscore":3}],16:[function(require,module,exports){
 module.exports = function (options) {
 	options || (options = {})
 	options.list || (options.list = "created")
@@ -2809,7 +2819,7 @@ var App = React.createClass({displayName: "App",
 });
 
 module.exports = App;
-},{"../stores/ScreenStore":13,"../stores/SessionStore":14,"./Navbar":22,"ff-react/components/Message":29,"ff-react/stores/DeviceStore":50,"underscore":3}],18:[function(require,module,exports){
+},{"../stores/ScreenStore":13,"../stores/SessionStore":14,"./Navbar":22,"ff-react/components/Message":30,"ff-react/stores/DeviceStore":51,"underscore":3}],18:[function(require,module,exports){
 
 var ScreenStore = require('../stores/ScreenStore')
 	, ScreenActions = require('../actions/ScreenActions');
@@ -2839,6 +2849,7 @@ var TouchAnchor = require('ff-react/components/TouchAnchor')
 	, TouchTextarea = require('ff-react/components/TouchTextarea')
 	, TouchCheckbox = require('ff-react/components/TouchCheckbox');
 
+var RolesSelector = require('./RolesSelector');
 
 var IssueItem = React.createClass({displayName: "IssueItem",
 
@@ -2879,6 +2890,7 @@ var IssueItem = React.createClass({displayName: "IssueItem",
 			React.createElement("div", {className: className}, 
 				React.createElement(TouchCheckbox, {name: "completed", className: "completed", value: issue.completed, onValueChange: this.onValueChange}), 
 				React.createElement(TouchInput, {name: "name", className: "name", placeholder: "name", value: issue.name, onValueChange: this.onValueChange}), 
+				React.createElement(RolesSelector, {name: "roles", value: issue.roles, onValueChange: this.onValueChange}), 
 				React.createElement(TouchInput, {name: "difficulty", className: "difficulty", value: issue.difficulty, onValueChange: this.onValueChange}), 
 				React.createElement(TouchAnchor, {className: "ss-icon right trash", onClick: this.onDelete, text: "trash"}), 
 				React.createElement("div", {className: "clear"}), 
@@ -2889,7 +2901,7 @@ var IssueItem = React.createClass({displayName: "IssueItem",
 });
 
 module.exports = IssueItem;
-},{"../actions/ScreenActions":4,"ff-react/components/TouchAnchor":31,"ff-react/components/TouchCheckbox":33,"ff-react/components/TouchInput":34,"ff-react/components/TouchTextarea":35}],20:[function(require,module,exports){
+},{"../actions/ScreenActions":4,"./RolesSelector":23,"ff-react/components/TouchAnchor":32,"ff-react/components/TouchCheckbox":34,"ff-react/components/TouchInput":35,"ff-react/components/TouchTextarea":36}],20:[function(require,module,exports){
 
 var ScreenActions = require('../actions/ScreenActions');
 
@@ -2920,6 +2932,7 @@ var Issues = React.createClass({displayName: "Issues",
 					React.createElement(TouchAnchor, {className: "ss-icon right", onClick: this.onAddIssue, text: "plus"}), 
 					React.createElement("h4", null, "Issues")
 				), 
+				React.createElement("div", {className: "clear"}), 
 				React.createElement(List, {data: this.props.data, screenId: this.props.screenId, element: IssueItem, onSelectItem: this.onSelectIssue, noItemsString: "No Issues"}), 
 				React.createElement("div", {className: "clear"})
 			)
@@ -2928,7 +2941,7 @@ var Issues = React.createClass({displayName: "Issues",
 });
 
 module.exports = Issues;
-},{"../actions/ScreenActions":4,"./IssueItem":19,"ff-react/components/List":27,"ff-react/components/TouchAnchor":31}],21:[function(require,module,exports){
+},{"../actions/ScreenActions":4,"./IssueItem":19,"ff-react/components/List":28,"ff-react/components/TouchAnchor":32}],21:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /*
@@ -3030,7 +3043,7 @@ var Login = React.createClass({displayName: "Login",
 });
 
 module.exports = Login;
-},{"../actions/SessionActions":5,"../stores/SessionStore":14,"ff-react/components/LoadingTouchButton":28,"ff-react/components/TouchButton":32,"ff-react/components/TouchInput":34,"ff-react/components/message":36}],22:[function(require,module,exports){
+},{"../actions/SessionActions":5,"../stores/SessionStore":14,"ff-react/components/LoadingTouchButton":29,"ff-react/components/TouchButton":33,"ff-react/components/TouchInput":35,"ff-react/components/message":37}],22:[function(require,module,exports){
 /** @jsx React.DOM */
 /*
  * Navbar for the top of the screen
@@ -3089,12 +3102,77 @@ var Navbar = React.createClass({displayName: "Navbar",
 });
 
 module.exports = Navbar;
-},{"../actions/SessionActions":5,"ff-react/components/TouchAnchor":31,"ff-react/components/message":36}],23:[function(require,module,exports){
+},{"../actions/SessionActions":5,"ff-react/components/TouchAnchor":32,"ff-react/components/message":37}],23:[function(require,module,exports){
+
+var TouchAnchor = require('ff-react/components/TouchAnchor');
+
+var roles = ["model", "booker", "accountant", "manager"];
+
+var RolesSelector = React.createClass({displayName: "RolesSelector",
+	propTypes : {
+		name : React.PropTypes.string,
+		onValueChange : React.PropTypes.func.isRequired,
+		value : React.PropTypes.array
+	},
+
+	// lifecycle
+	getDefaultProps : function () {
+		return {
+			value : []
+		};
+	},
+
+	// factory functions
+	roleToggler : function (role) {
+		var self = this;
+		return function() {
+			var i = self.selectedIndex(role)
+				, value = self.props.value || [];
+
+			if (i >= 0) {
+				value.splice(i,1);	
+			} else {
+				value.push(role);
+			}
+
+			self.props.onValueChange(value,self.props.name);
+		}
+	},
+
+	// methods
+	selectedIndex : function (role) {
+		if (!this.props.value) { return -1; }
+		for (var i=0,r; r=this.props.value[i]; i++) {
+			if (role == r) {
+				return i;
+			}
+		}
+		return -1;
+	},
+
+	// render
+	render : function () {
+		var self = this;
+		return (
+			React.createElement("div", {className: "rolesSelector"}, 
+				
+					roles.map(function(role, i){
+						return (React.createElement(TouchAnchor, {className: (self.selectedIndex(role) >= 0) ? "selected role" : "role", onClick: self.roleToggler(role), key: i, text: role}));
+					})
+				
+			)
+		);
+	}
+});
+
+module.exports = RolesSelector;
+},{"ff-react/components/TouchAnchor":32}],24:[function(require,module,exports){
 
 var ScreenStore = require('../stores/ScreenStore')
 	, ScreenActions = require('../actions/ScreenActions');
 
-var Issues = require('./Issues');
+var Issues = require('./Issues')
+	, RolesSelector = require('./RolesSelector');
 
 var TouchAnchor = require('ff-react/components/TouchAnchor')
 	, TouchInput = require('ff-react/components/TouchInput')
@@ -3121,6 +3199,7 @@ var Screen = React.createClass({displayName: "Screen",
 
 	// event handlers
 	onStoreChange : function () {
+		console.log(ScreenStore.one(this.props.screenId));
 		this.setState({ screen : ScreenStore.one(this.props.screenId) });
 	},
 	onValueChange : function (value, name) {
@@ -3130,6 +3209,7 @@ var Screen = React.createClass({displayName: "Screen",
 	},
 	onSave : function () {
 		ScreenActions.save(this.state.screen);
+		window.router.navigate("/", { trigger : true });
 	},
 
 	// render
@@ -3149,8 +3229,8 @@ var Screen = React.createClass({displayName: "Screen",
 				React.createElement("div", {className: "row span10"}, 
 					React.createElement(TouchAnchor, {className: "ss-icon right", onClick: this.onSave, text: "save"}), 
 					React.createElement(TouchInput, {name: "name", placeholder: "name", className: "name", value: screen.name, onValueChange: this.onValueChange}), 
-					React.createElement(TouchInput, {name: "endpoint", placeholder: "endpoint", className: "endpoint", value: screen.endpoint, onValueChange: this.onValueChange}), 
-					React.createElement(TouchTextarea, {name: "description", className: "description", placeholder: "description", value: screen.description, onValueChange: this.onValueChange})
+					React.createElement(RolesSelector, {name: "roles", value: screen.roles, onValueChange: this.onValueChange}), 
+					React.createElement(TouchTextarea, {name: "description", placeholder: "description", className: "description", placeholder: "description", value: screen.description, onValueChange: this.onValueChange})
 				), 
 				React.createElement("div", {className: "clear"}), 
 				React.createElement(Issues, {screenId: screen.id, data: screen.issues})
@@ -3160,7 +3240,7 @@ var Screen = React.createClass({displayName: "Screen",
 });
 
 module.exports = Screen;
-},{"../actions/ScreenActions":4,"../stores/ScreenStore":13,"./Issues":20,"ff-react/components/FourOhFour":26,"ff-react/components/TouchAnchor":31,"ff-react/components/TouchInput":34,"ff-react/components/TouchTextarea":35}],24:[function(require,module,exports){
+},{"../actions/ScreenActions":4,"../stores/ScreenStore":13,"./Issues":20,"./RolesSelector":23,"ff-react/components/FourOhFour":27,"ff-react/components/TouchAnchor":32,"ff-react/components/TouchInput":35,"ff-react/components/TouchTextarea":36}],25:[function(require,module,exports){
 
 function copyTouch (t) {
 	return { identifier: t.identifier, pageX: t.pageX, pageY: t.pageY, screenX : t.screenX, screenY : t.screenY };
@@ -3209,8 +3289,11 @@ var ScreenItem = React.createClass({displayName: "ScreenItem",
 
 	// render 
 	render : function () {
+		var screen = this.props.data
+			, completed = _.filter(screen.issues, function(i){ return (i.completed === true); }).length;
 		return (
 			React.createElement("div", {className: "item", onTouchStart: this.onTouchStart, onTouchEnd: this.onTouchEnd, onClick: this.onClick}, 
+				React.createElement("h4", {className: "right"}, completed, "/", screen.issues.length), 
 				React.createElement("h3", null, this.props.data.name || "Untitled Screen")
 			)
 		);
@@ -3218,10 +3301,11 @@ var ScreenItem = React.createClass({displayName: "ScreenItem",
 });
 
 module.exports = ScreenItem;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /** @jsx React.DOM */
 
-var ScreenStore = require('../stores/ScreenStore')
+var ScreenConstants = require('../constants/ScreenConstants')
+	, ScreenStore = require('../stores/ScreenStore')
 	, ScreenActions = require('../actions/ScreenActions')
 
 var ScreenItem = require('./ScreenItem');
@@ -3233,7 +3317,7 @@ var Screens = React.createClass({displayName: "Screens",
 	// lifecycle
 	getInitialState : function () {
 		return {
-			screens : ScreenStore.all()
+			screens : ScreenStore.alphaAll()
 		}
 	},
 	componentDidMount : function () {
@@ -3244,8 +3328,15 @@ var Screens = React.createClass({displayName: "Screens",
 	},
 
 	// event handlers
-	onStoreChange : function () {
-		this.setState({ screens : ScreenStore.all() });
+	onStoreChange : function (action) {
+		if (action) {
+			switch (action.actionType) {
+				case ScreenConstants.SCREEN_CREATE:
+					window.router.navigate("/screens/" + action.screen.id, { trigger : true });
+					return;
+			}
+		}
+		this.setState({ screens : ScreenStore.alphaAll() });
 	},
 	onSelectScreen : function (screen) {
 		window.router.navigate("/screens/" + screen.id, { trigger : true });
@@ -3269,7 +3360,7 @@ var Screens = React.createClass({displayName: "Screens",
 });
 
 module.exports = Screens;
-},{"../actions/ScreenActions":4,"../stores/ScreenStore":13,"./ScreenItem":24,"ff-react/components/List":27,"ff-react/components/TouchAnchor":31}],26:[function(require,module,exports){
+},{"../actions/ScreenActions":4,"../constants/ScreenConstants":7,"../stores/ScreenStore":13,"./ScreenItem":25,"ff-react/components/List":28,"ff-react/components/TouchAnchor":32}],27:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /* Standard Not-Found Component with a go-back button. */
@@ -3308,7 +3399,7 @@ var FourOhFour = React.createClass({displayName: "FourOhFour",
 });
 
 module.exports = FourOhFour;
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var DeviceStore = require("../stores/DeviceStore")
@@ -3391,7 +3482,7 @@ var List = React.createClass({displayName: "List",
 });
 
 module.exports = List;
-},{"../stores/DeviceStore":50,"./Spinner":30,"underscore":49}],28:[function(require,module,exports){
+},{"../stores/DeviceStore":51,"./Spinner":31,"underscore":50}],29:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /*
@@ -3501,7 +3592,7 @@ var LoadingTouchButton = React.createClass({displayName: "LoadingTouchButton",
 });
 
 module.exports = LoadingTouchButton;
-},{"../utils/clickbuster":53}],29:[function(require,module,exports){
+},{"../utils/clickbuster":54}],30:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /* Message Box Compnent */
@@ -3529,7 +3620,7 @@ var Message = React.createClass({displayName: "Message",
 });
 
 module.exports = Message;
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /** @jsx React.DOM */
 
 // A simple Spinner
@@ -3552,7 +3643,7 @@ var Spinner = React.createClass({displayName: "Spinner",
 });
 
 module.exports = Spinner;
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /*
@@ -3650,7 +3741,7 @@ var TouchAnchor = React.createClass({displayName: "TouchAnchor",
 });
 
 module.exports = TouchAnchor;
-},{"../utils/clickbuster":53}],32:[function(require,module,exports){
+},{"../utils/clickbuster":54}],33:[function(require,module,exports){
 /** @jsx React.DOM */
 
 /*
@@ -3756,7 +3847,7 @@ var TouchButton = React.createClass({displayName: "TouchButton",
 });
 
 module.exports = TouchButton;
-},{"../utils/clickbuster":53}],33:[function(require,module,exports){
+},{"../utils/clickbuster":54}],34:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var Checkbox = React.createClass({displayName: "Checkbox",
@@ -3798,7 +3889,7 @@ var Checkbox = React.createClass({displayName: "Checkbox",
 
 
 module.exports = Checkbox;
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /** @jsx React.DOM */
 
 
@@ -3868,7 +3959,7 @@ var TouchInput = React.createClass({displayName: "TouchInput",
 });
 
 module.exports = TouchInput;
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var TouchTextarea = React.createClass({displayName: "TouchTextarea",
@@ -3970,9 +4061,9 @@ var TouchTextarea = React.createClass({displayName: "TouchTextarea",
 });
 
 module.exports = TouchTextarea;
-},{}],36:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"dup":29}],37:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"dup":30}],38:[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 module.exports = keyMirror({
@@ -3985,7 +4076,7 @@ module.exports = keyMirror({
 	DEVICE_KEYUP : null,
 	
 });
-},{"react/lib/keyMirror":55}],38:[function(require,module,exports){
+},{"react/lib/keyMirror":56}],39:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -4156,13 +4247,13 @@ Dispatcher.prototype = _.extend(Dispatcher.prototype, {
 });
 
 module.exports = Dispatcher;
-},{"es6-promise":39,"underscore":49}],39:[function(require,module,exports){
+},{"es6-promise":40,"underscore":50}],40:[function(require,module,exports){
 "use strict";
 var Promise = require("./promise/promise").Promise;
 var polyfill = require("./promise/polyfill").polyfill;
 exports.Promise = Promise;
 exports.polyfill = polyfill;
-},{"./promise/polyfill":43,"./promise/promise":44}],40:[function(require,module,exports){
+},{"./promise/polyfill":44,"./promise/promise":45}],41:[function(require,module,exports){
 "use strict";
 /* global toString */
 
@@ -4256,7 +4347,7 @@ function all(promises) {
 }
 
 exports.all = all;
-},{"./utils":48}],41:[function(require,module,exports){
+},{"./utils":49}],42:[function(require,module,exports){
 (function (process,global){
 "use strict";
 var browserGlobal = (typeof window !== 'undefined') ? window : {};
@@ -4320,7 +4411,7 @@ function asap(callback, arg) {
 
 exports.asap = asap;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":2}],42:[function(require,module,exports){
+},{"_process":2}],43:[function(require,module,exports){
 "use strict";
 var config = {
   instrument: false
@@ -4336,7 +4427,7 @@ function configure(name, value) {
 
 exports.config = config;
 exports.configure = configure;
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 (function (global){
 "use strict";
 /*global self*/
@@ -4377,7 +4468,7 @@ function polyfill() {
 
 exports.polyfill = polyfill;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./promise":44,"./utils":48}],44:[function(require,module,exports){
+},{"./promise":45,"./utils":49}],45:[function(require,module,exports){
 "use strict";
 var config = require("./config").config;
 var configure = require("./config").configure;
@@ -4589,7 +4680,7 @@ function publishRejection(promise) {
 }
 
 exports.Promise = Promise;
-},{"./all":40,"./asap":41,"./config":42,"./race":45,"./reject":46,"./resolve":47,"./utils":48}],45:[function(require,module,exports){
+},{"./all":41,"./asap":42,"./config":43,"./race":46,"./reject":47,"./resolve":48,"./utils":49}],46:[function(require,module,exports){
 "use strict";
 /* global toString */
 var isArray = require("./utils").isArray;
@@ -4679,7 +4770,7 @@ function race(promises) {
 }
 
 exports.race = race;
-},{"./utils":48}],46:[function(require,module,exports){
+},{"./utils":49}],47:[function(require,module,exports){
 "use strict";
 /**
   `RSVP.reject` returns a promise that will become rejected with the passed
@@ -4727,7 +4818,7 @@ function reject(reason) {
 }
 
 exports.reject = reject;
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 function resolve(value) {
   /*jshint validthis:true */
@@ -4743,7 +4834,7 @@ function resolve(value) {
 }
 
 exports.resolve = resolve;
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 function objectOrFunction(x) {
   return isFunction(x) || (typeof x === "object" && x !== null);
@@ -4766,7 +4857,7 @@ exports.objectOrFunction = objectOrFunction;
 exports.isFunction = isFunction;
 exports.isArray = isArray;
 exports.now = now;
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -6183,7 +6274,7 @@ exports.now = now;
   }
 }.call(this));
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var Store = require("./Store")
 	, DeviceConstants = require("../constants/DeviceConstants");
 
@@ -6287,7 +6378,7 @@ window.addEventListener("keyup", function(e){
 
 // export a singleton
 module.exports = DeviceStore
-},{"../constants/DeviceConstants":37,"./Store":52}],51:[function(require,module,exports){
+},{"../constants/DeviceConstants":38,"./Store":53}],52:[function(require,module,exports){
 var Store = require('./Store')
 	, _ = require('underscore');
 
@@ -6464,7 +6555,7 @@ var StandardStore = Store.extend({
 });
 
 module.exports = StandardStore;
-},{"./Store":52,"underscore":49}],52:[function(require,module,exports){
+},{"./Store":53,"underscore":50}],53:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter
   , _ = require('underscore')
 
@@ -6576,7 +6667,7 @@ Store.extend = function extend (protoProps, staticProps) {
 
 
 module.exports = Store;
-},{"events":1,"underscore":49}],53:[function(require,module,exports){
+},{"events":1,"underscore":50}],54:[function(require,module,exports){
 // https://developers.google.com/mobile/articles/fast_buttons
 
 var clickbuster = {
@@ -6603,7 +6694,7 @@ var clickbuster = {
 document.addEventListener('click', clickbuster.onClick, true);
 
 module.exports = clickbuster;
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -6660,7 +6751,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":2}],55:[function(require,module,exports){
+},{"_process":2}],56:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -6715,4 +6806,4 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":54,"_process":2}]},{},[4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
+},{"./invariant":55,"_process":2}]},{},[4,5,6,7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]);

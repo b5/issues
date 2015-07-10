@@ -6,6 +6,7 @@ var TouchAnchor = require('ff-react/components/TouchAnchor')
 	, TouchTextarea = require('ff-react/components/TouchTextarea')
 	, TouchCheckbox = require('ff-react/components/TouchCheckbox');
 
+var RolesSelector = require('./RolesSelector');
 
 var IssueItem = React.createClass({
 
@@ -46,6 +47,7 @@ var IssueItem = React.createClass({
 			<div className={className}>
 				<TouchCheckbox name="completed" className="completed" value={issue.completed} onValueChange={this.onValueChange} />
 				<TouchInput name="name" className="name" placeholder="name" value={issue.name} onValueChange={this.onValueChange} />
+				<RolesSelector name="roles" value={issue.roles} onValueChange={this.onValueChange} />
 				<TouchInput name="difficulty" className="difficulty" value={issue.difficulty} onValueChange={this.onValueChange} />
 				<TouchAnchor className="ss-icon right trash" onClick={this.onDelete} text="trash" />
 				<div className="clear"></div>

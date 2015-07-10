@@ -2,7 +2,8 @@
 var ScreenStore = require('../stores/ScreenStore')
 	, ScreenActions = require('../actions/ScreenActions');
 
-var Issues = require('./Issues');
+var Issues = require('./Issues')
+	, RolesSelector = require('./RolesSelector');
 
 var TouchAnchor = require('ff-react/components/TouchAnchor')
 	, TouchInput = require('ff-react/components/TouchInput')
@@ -29,6 +30,7 @@ var Screen = React.createClass({
 
 	// event handlers
 	onStoreChange : function () {
+		console.log(ScreenStore.one(this.props.screenId));
 		this.setState({ screen : ScreenStore.one(this.props.screenId) });
 	},
 	onValueChange : function (value, name) {
@@ -38,6 +40,7 @@ var Screen = React.createClass({
 	},
 	onSave : function () {
 		ScreenActions.save(this.state.screen);
+		window.router.navigate("/", { trigger : true });
 	},
 
 	// render
@@ -57,8 +60,8 @@ var Screen = React.createClass({
 				<div className="row span10">
 					<TouchAnchor className="ss-icon right" onClick={this.onSave} text="save" />
 					<TouchInput name="name" placeholder="name" className="name" value={screen.name} onValueChange={this.onValueChange} />
-					<TouchInput name="endpoint" placeholder="endpoint" className="endpoint" value={screen.endpoint} onValueChange={this.onValueChange} />
-					<TouchTextarea name="description" className="description" placeholder="description" value={screen.description} onValueChange={this.onValueChange} />
+					<RolesSelector name="roles" value={screen.roles} onValueChange={this.onValueChange} />
+					<TouchTextarea name="description" placeholder="description" className="description" placeholder="description" value={screen.description} onValueChange={this.onValueChange} />
 				</div>
 				<div className="clear"></div>
 				<Issues screenId={screen.id} data={screen.issues} />

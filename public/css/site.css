@@ -700,7 +700,7 @@ button {
   min-height: 35px;
   text-transform: uppercase;
   color: #5ebaca;
-  background: #083b51;
+  background: #282828;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
@@ -983,7 +983,7 @@ html {
   color: #3c403f;
 }
 body.splash {
-  background: #083b51;
+  background: #282828;
   color: #fff;
 }
 body.splash hr {
@@ -992,11 +992,11 @@ body.splash hr {
 }
 body.splash button {
   background: #273440;
-  color: #083b51;
+  color: #282828;
 }
 header,
 footer {
-  background: #083b51;
+  background: #282828;
   color: #fff;
 }
 header a,
@@ -1060,7 +1060,7 @@ h4.primary,
 h5.primary,
 h6.primary,
 p.primary {
-  color: #083b51;
+  color: #282828;
 }
 hr {
   border-top: none;

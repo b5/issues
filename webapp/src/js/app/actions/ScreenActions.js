@@ -24,18 +24,21 @@ var ScreenActions = {
 	},
 	save : function (screen) {
 		if (!_.isObject(screen)) { return false; }
+		var remove;
 
 		// if ths screen has a cid, remove it
-		if (screen.id.indexOf("screen") > -1) {
-			screen.id == 0;
+		if (screen.id.indexOf("screen") !== -1) {
+			remove = screen.id;
+			screen.id = "";
 		}
 
-		// AppDispatcher.handleServerAction({
-		// 	actionType : ScreenConstants.SCREEN_SAVE,
-		// 	requestType : (screen.id) ? ServerConstants.PUT : ServerConstants.POST,
-		// 	url : (screen.id) ? '/api/screens/' + screen.id : '/api/screens',
-		// 	data : screen
-		// });
+		AppDispatcher.handleServerAction({
+			actionType : ScreenConstants.SCREEN_SAVE,
+			requestType : (screen.id) ? ServerConstants.PUT : ServerConstants.POST,
+			url : (screen.id) ? '/api/screens/' + screen.id : '/api/screens',
+			data : screen,
+			remove : remove
+		});
 
 		return true;
 	},
