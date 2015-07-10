@@ -1,0 +1,119 @@
+// make padding not't affect width calculations
+*, *:before, *:after
+	vendor(box-sizing, border-box)
+
+numCols = 10
+marginWidth = 1
+paddingWidth = 1
+
+colWidth(w)
+	((w * (100 / numCols)) - (marginWidth * 2))%
+
+tinyWidth(w)
+	((w * (100 / numCols)) - marginWidth)%
+
+offsetWidth(w)
+	(w * (100 / numCols) + marginWidth)%
+
+body
+	padding 60px 0
+
+.left
+	float left
+.right
+	float right
+.hidden
+	display none
+	
+.masterDetail
+	.master, .detail
+		float left
+		height 100%
+		overflow-y auto
+		position relative
+	.master
+		width 25%
+	.detail
+		width 75%
+
+.container
+	margin 0 auto
+	width 1200px
+	&:after
+		display block
+		content " "
+		clear both
+		height 0
+		visibility hidden
+		height 0
+
+	.span1, .span2, .span3, .span4, .span5, 
+	.span6, .span7, .span8, .span9, .span10
+		float left
+		display block
+		margin 0 (marginWidth)%
+		padding 0 (paddingWidth)%
+
+	.clear
+		clear both
+		
+	.row
+		margin-top 0.5em
+		margin-bottom 0.5em
+		min-height 3em
+		&::after
+			display block
+			content " "
+			clear both
+			height 0
+			visibility hidden
+			height 0
+
+	for num in (1..numCols)
+		.span{num}
+			width colWidth(num)
+
+	for num in (1..numCols)
+		.offset{num}
+			margin-left offsetWidth(num)
+
+// big desktops
+@media only screen and (min-width:1024px) and (max-width:1300px)
+	.container
+		width 960px
+
+// Tablet - Portrait
+@media only screen and (min-width: 860px) and (max-width: 1023px)
+	.container
+		width 800px
+
+@media only screen and (min-width: 480px) and (max-width: 859px)
+	.container
+		margin 0 1%
+		width 98%
+		.span1, .span2, .span3, .span4, .span5, 
+		.span6, .span7, .span8, .span9, .span10
+			margin 0
+			width 100%
+		for num in (1..numCols)
+			.offset{num}
+				margin-left offsetWidth(num)
+		for num in (1..numCols)
+			.span{num}.medium
+				width tinyWidth(num)
+
+// All the Tiny Screens
+@media only screen and (max-width: 479px)
+	.container
+		padding 0 8px
+		width 100%
+		.span1, .span2, .span3, .span4, .span5, 
+		.span6, .span7, .span8, .span9, .span10
+			margin 0
+			width 100%
+		for num in (1..numCols)
+			.span{num}.tiny
+				width tinyWidth(num)
+		for num in (1..numCols)
+			.offset{num}.tiny
+				margin-left offsetWidth(num)

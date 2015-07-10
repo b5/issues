@@ -1,0 +1,89 @@
+*:focus
+	outline none
+
+.fields .field
+	margin-top 8px
+	
+textarea
+	resize none
+
+button
+	min-height 35px
+	text-transform uppercase
+	color secondary
+	background primary
+	border-radius 2px
+	padding 6px 6px
+	margin 5px 0
+	box-shadow none
+	width 100%
+	border none
+	.spinner
+		margin 0 auto
+		> div
+			background-color foreground
+
+button:disabled, .disabled
+	opacity 0.5
+
+button:disabled.loading
+	opacity 1.0	
+
+button.large
+	min-width 200px
+	min-height 200px
+	
+button.round
+	border-radius 100%
+	
+button.large.round
+	width 200px
+	height 200px
+	margin 0 auto
+
+input, textarea
+	border none
+	border-radius 0
+	border-bottom 1px solid transparent
+	color textColor
+	padding 4px 0
+	margin 0 0 5px 0
+	width 100%
+	background transparent
+	-webkit-tap-highlight-color transparent
+
+input:focus, textarea:focus
+	border-bottom 1px solid transparent
+
+input:disabled, textarea:disabled
+	border-bottom 1px transparent
+	
+input:disabled::-webkit-input-placeholder, textarea:disabled::-webkit-input-placeholder
+	color transparent
+input:disabled:-moz-placeholder, textarea:disabled:-moz-placeholder
+	color transparent
+input:disabled::-moz-placeholder, textarea:disabled::-moz-placeholder
+	color transparent
+input:disabled:-ms-input-placeholder, textarea:disabled:-ms-input-placeholder
+	color transparent
+	
+.field.invalid input, .field.invalid textarea
+	border-color red
+
+select:focus
+	color rgb(0,0,0)
+	margin 0
+
+.contact textarea
+	min-height 150px
+	border-radius 3px
+	background rgba(0,0,0,0.1)
+	border-bottom 1px solid transparent
+	
+input.invalid,
+textarea.invalid
+	border-bottom 1px solid red
+	
+.validMessage.invalid, .error
+	color red
+	

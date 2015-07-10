@@ -1,0 +1,52 @@
+@import('palette')
+
+body#help
+	background foreground
+	color textColor
+	padding 0
+	margin 0
+	#pageHeader
+		background #444
+		color white
+		min-height 100px
+		padding 30px
+		margin 0 0 15px 0
+		.logo
+			max-width 80px
+			display block
+			img
+				width 100%
+	header
+		background transparent
+		color textColor
+		margin-bottom 15px
+	article
+		margin-bottom 80px
+	#sidebar
+		margin-top 0.5em
+		color secondary
+		ul
+			list-style none
+			padding 0
+			margin 0
+			ul
+				padding-left 1em
+				li a
+					margin 0
+					text-transform none
+					font-family "HalisGR-Book", "Helvetica", sans-serif
+			li a
+				margin 6px 0
+				text-transform uppercase
+				font-family "HalisGR-Medium", "Helvetica", sans-serif
+				padding 5px 0
+				vertical-align middle
+				display block
+				min-height 30px
+		.appLinks
+			border-top 1px solid quarterBackground
+		.helpMenu
+			border-top 1px solid quarterBackground
+			border-bottom 1px solid quarterBackground
+			
+		

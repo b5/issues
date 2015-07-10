@@ -1,0 +1,97 @@
+@import('palette')
+@import('css3')
+@import('normalize')
+@import('grid')
+@import('type')
+@import('forms')
+@import('animation')
+
+body, html
+	background rgb(120,120,120)
+	color textColor
+
+body.splash
+	background primary
+	color white
+	hr
+		width 90%
+		margin 5px 1.5%
+	button
+		background rgb(39,52,64)
+		color primary
+
+header, footer
+	background primary
+	color white
+	a
+		color secondary
+
+.form
+	min-width 320px
+	max-width 600px
+	margin 30px auto
+	box-shadow 0 0 5px rgba(0,0,0,0.30)
+	border-radius 3px
+	background white
+	section
+		padding 10px
+	header, footer
+		padding 10px
+	// input, textarea
+	// 	color white
+	// 	border-bottom 1px solid white
+	// input:focus, textarea:focus
+	// 	border-bottom 2px solid white
+	// input::-webkit-input-placeholder, textarea::-webkit-input-placeholder
+	// 	color rgba(250,250,250,0.5)
+	// input:-moz-placeholder, textarea:-moz-placeholder /* Firefox 18- */
+	// 	color rgba(250,250,250,0.5)
+	// input::-moz-placeholder, textarea::-moz-placeholder  /* Firefox 19+ */
+	// 	color rgba(250,250,250,0.5)
+	// input:-ms-input-placeholder, textarea:-ms-input-placeholder
+	// 	color rgba(250,250,250,0.5)
+		
+.small.form
+	width 320px
+
+.page
+	background white
+	padding-top 2em
+	padding-bottom 2em
+	margin-bottom 2em
+	margin-top 2em
+
+#logo
+	display block
+	width 120px
+	height 64px
+	margin 25px auto
+
+a
+	text-decoration none
+	color secondary
+a.current
+	opacity 0.5
+
+.clear
+	clear both
+
+.noMargin
+	margin-top 0
+	margin-bottom 0
+
+h1.primary,h2.primary,h3.primary,h4.primary,h5.primary,h6.primary,p.primary
+	color primary
+
+hr
+	border-top none
+	border-left 1px transparent
+	border-left 1px transparent
+	border-right 1px transparent
+	border-bottom 1px dotted halfBackground
+
+img
+	width 100%
+
+nav button
+	max-width 100px

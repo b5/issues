@@ -1,0 +1,269 @@
+@import('../../../site/src/style/site')
+@import('./components')
+
+*, *:active
+	-webkit-tap-highlight-color rgba(0,0,0,0)
+
+.warning
+	background warningColor
+
+.icon
+	color primary
+
+a.ss-icon
+	display block
+	min-width 35px
+	min-height 35px
+	line-height 35px
+	text-align center
+
+body, #stage
+	position absolute
+	margin 0
+	padding 0
+	top 0
+	left 0
+	right 0
+	bottom 0
+	overflow hidden
+	
+#stage
+	overflow auto
+	-webkit-overflow-scrolling touch
+	transition all 0.25s
+	box-shadow 0 0 8px rgba(0,0,0,0.25)
+	// -webkit-transform translate3d(0,0,0)
+	// transform translate3d(0,0,0)
+	background rgb(120,120,120)
+
+#stage.mainMenuOpen
+	left 260px
+	right -260px
+
+#navbar.hidden
+	display none
+
+#navbar
+	position absolute
+	z-index 2
+	top 0
+	left 0
+	width 100%
+	min-height 50px
+	background primary
+	box-shadow 0 2px 15px rgba(0,0,0,0.09)
+	transition all 0.25s
+	vendor(user-select, none)
+	.menuToggle
+		margin 0 10px 0 0
+		height 100%
+		min-width 40px
+		position absolute
+		padding 27px 0 0 10px
+	.container
+		padding 10px 0
+	#logo
+		display block
+		width 45px
+		height 48px
+		margin 30px 15px 0 15px
+		float right
+		img
+			width 100%
+	.items
+		padding 20px 0
+		a.item
+			color white
+			font-size 1.25em
+			margin 5px 18px
+	.message
+		width 100%
+		margin-bottom -10px
+		padding 2px
+		min-height 34px
+		color white
+		text-align center
+		background #666
+	button
+		background halfForeground
+
+body.standalone #navbar
+	padding 30px 0 10px 0
+	
+.login
+	background primary
+	color white
+	padding 1em 10px
+	input
+		color white
+		
+#page
+	margin-top 130px
+	margin-bottom 50px
+
+.page
+	margin-top 85px
+	padding 0
+	
+#page.screens, #page.screen
+	background white
+	min-height 300px
+	padding 0
+	> header, > footer
+		background primary
+		color white
+		a
+			opacity 0.5
+			transition all 0.45s
+			margin 4px 8px
+		a.current
+			opacity 1.0
+		a.right
+			opacity 1.0
+	.voucher.received
+		opacity 0.5
+		
+#page.screen
+	.name
+		font-size 1.75em
+		font-weight bold
+
+.list
+	list-style none
+	header, .header
+		background primary
+		min-height 30px
+	.item
+		border-bottom 1px solid barelyThere
+		min-height 50px
+		margin-top 0
+		margin-bottom 0
+		padding 5px 1%
+	.item.selected
+		background barelyThere
+	.noItems
+		margin-top 25px
+		opacity 0.5
+		text-align center
+		
+.ratePicker
+	label
+		margin-top 15px
+	a
+		display block
+		margin 10px 0
+	input
+		color white
+	.rate
+		float left
+	select
+		float left
+		margin-top 5px
+
+.dialogue
+	background primary
+	color white
+	border-radius 2px
+	padding 1.5%
+		
+.masterDetail
+	.master
+		header
+			padding-top 5px
+	.detail
+		#page
+			margin-top 0
+			
+.portraitIcon
+	display block
+	width 34px
+	height 34px
+	margin 5px
+	background primary
+	border-radius 100%
+	color white
+	h5
+		text-align center
+		line-height 34px
+		margin 0
+.portraitIcon.selected
+	background gray
+	color primary
+	
+.model.item .name
+	margin-top 12px
+	
+#page.screen .issues 
+	.item
+		position relative
+		min-height 45px
+		.completed, .checkbox
+			position absolute
+			top 0
+			left 0
+			margin 5px
+		.name, .difficulty, .description
+			margin 0 40px
+		.name
+			font-size 1.25em
+		.trash
+			position absolute
+			top 0
+			right 1%
+			margin 5px 0
+	.item.completed
+		opacity 0.5	
+		
+	
+			
+// big desktops
+@media only screen and (max-width:1300px)
+	#navbar
+		top 0
+// Tablet - Portrait
+@media only screen and (max-width: 1024px)
+	#navbar
+		top 0
+
+// Tablet - Landscape
+@media only screen and (max-width: 860px)
+	#navbar
+		top 0
+		min-height 70px
+		padding 0
+		#logo
+			display block
+			width 45px
+			height 30px
+			margin 32px 15px 0 10px
+		.items
+			padding 20px 0
+			width 70%
+			a
+				font-size 0.9em
+				margin 5px 10px
+	#page
+		margin-top 110px
+
+// All the Tiny Screens
+@media only screen and (max-width: 479px)
+	#navbar
+		min-height 70px
+		.menuToggle
+			padding-top 20px
+		#logo
+			width 40px
+			height 10px
+			float none
+			margin 24px auto 0 auto
+		.container
+			padding 0
+			.items
+				display none
+				// width 75%
+				// padding 7px 0
+				// a
+				// 	font-size 0.8em
+				// 	margin 25px 5px
+	#page
+		margin-top 80px

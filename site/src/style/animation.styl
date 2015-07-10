@@ -1,0 +1,48 @@
+stdDur = 0.2s
+
+
+@-webkit-keyframes fadeIn
+	0%
+		opacity 0
+	100%
+		opacity 1.0
+@keyframes fadeIn
+	0%
+		opacity 0
+	100%
+		opacity 1.0
+
+.fadeIn
+	-webkit-animation fadeIn stdDur ease-in-out
+	animation fadeIn stdDur ease-in-out
+
+@-webkit-keyframes fadeOut
+	0%
+		opacity 1.0
+	100%
+		opacity 0
+		display none
+
+@keyframes fadeOut
+	0%
+		opacity 1.0
+	100%
+		opacity 0
+		display none
+
+.fadeOut
+	-webkit-animation fadeOut stdDur ease-in-out
+	animation fadeOut stdDur ease-in-out
+	opacity 0
+
+@-webkit-keyframes bouncedelay 
+	0%, 80%, 100% { -webkit-transform: scale(0.0) }
+	40% { -webkit-transform: scale(1.0) }
+
+@keyframes bouncedelay 
+	0%, 80%, 100%
+		transform: scale(0.0);
+		-webkit-transform: scale(0.0);
+	40%
+		transform: scale(1.0);
+		-webkit-transform: scale(1.0);

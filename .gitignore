@@ -1,0 +1,17 @@
+.DS_Store
+.sublime-workspace
+gin-bin
+webapp/node_modules
+node_modules
+
+converage.out
+
+logfile
+
+screens.json
+
+webapp/app.js
+webapp/src/js/app/views
+admin/src/js/app/views
+
+issues
